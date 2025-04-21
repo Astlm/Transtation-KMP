@@ -1,0 +1,35 @@
+# .github/workflows/android_build.yml
+
+name: Build Android App # 工作流名称
+
+on: # 触发工作流的事件
+  workflow_dispatch: # 允许手动触发工作流
+
+jobs: # 工作流包含的任务
+  build_android: # 任务 ID (可自定义)
+    name: Build Android APK # 任务名称 (显示在 GitHub UI)
+    runs-on: ubuntu-latest # 指定运行任务的虚拟机环境
+
+    steps: # 任务执行的步骤
+      - name: Checkout code # 步骤 1: 检出代码
+        uses: actions/checkout@v4 # 使用官方的 checkout action
+
+      - name: Set up JDK 17 # 步骤 2: 设置 Java 环境
+        uses: actions/setup-java@v4 # 使用官方的 setup-java action
+        with:
+          java-version: '17' # **假设**: 指定 JDK 版本为 17 (请根据项目实际情况核实和修改)
+          distribution: 'temurin' # 使用 Eclipse Temurin 发行版
+          cache: 'gradle' # 缓存 Gradle 依赖项，加速后续构建
+
+      - name: Grant execute permission for gradlew # 步骤 3: 赋予 Gradle Wrapper 执行权限
+        run: chmod +x gradlew # **假设**: Gradle Wrapper 在根目录
+
+      - name: Build with Gradle # 步骤 4: 执行 Gradle 构建
+        run: ./gradlew :composeApp:assembleDebug # **假设**: 模块名为 'composeApp', 构建任务为 'assembleDebug' (请根据项目实际情况核实和修改)
+
+      - name: Upload APK artifact # 步骤 5: 上传构建产物 (APK 文件)
+        uses: actions/upload-artifact@v4 # 使用官方的 upload-artifact action
+        with:
+          name: transtation-debug-apk # 上传的产物名称
+          path: composeApp/build/outputs/apk/debug/*.apk # **假设**: Debug APK 的输出路径 (请根据项目实际情况核实和修改)
+          if-no-files-found: error # 如果没有找到文件则报错
