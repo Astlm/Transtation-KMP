@@ -108,7 +108,7 @@ kotlin {
 //            implementation(libs.androidx.paging.common)
 
 //            implementation(libs.rhino.android)
-            implementation("com.github.getActivity:ToastUtils:12.0")
+            implementation("com.github.getActivity:Toaster:12.0")
 
             // mmkv
             api(libs.mmkv)
